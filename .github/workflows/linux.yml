@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: ${{ matrix.version }} - x86_64-unknown-linux-gnu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: ⚡ Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/yarn.lock') }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
+
+      - name: lint
+        run: make lint
+
+      - name: build
+        run: make
+
+      - name: Deploy to GitHub Pages
+        if: github.repository == 'WSoC-VITAP/WSoC2102-Project'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/
