@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: "16.x"
 
+      - name: ready development environment
+        run: make env
+
       - name: lint
         run: make lint
 

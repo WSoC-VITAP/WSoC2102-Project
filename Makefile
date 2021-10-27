@@ -5,6 +5,9 @@ default: ## Build project
 	@yarn sass
 	@cp -r static/* ./dist
 
+env: ## Ready development environment
+	@yarn install
+
 clean:  ## Clean build assets
 	@-rm -rf node_modules
 	@-rm -rf dist
